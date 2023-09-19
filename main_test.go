@@ -17,20 +17,21 @@ import (
 	"time"
 )
 
-const (
-	baseURL = "http://localhost:8080/check_ip"
-)
+
 
 var (
+	serverURL 		string
 	concurrentRequests int
 	runDuration        time.Duration
 	testUniqueName     string
 	outputFolder       string
 	testDisplayName    string
 	testDescription    string
+	testStartTime      int64
 )
 
 type MetaData struct {
+	ServerURL 		string  `json:"server_url"`
 	TestUniqueName     string  `json:"test_unique_name"`
 	TestDisplayName    string  `json:"test_display_name"`
 	TestDescription    string  `json:"test_description"`
@@ -41,6 +42,7 @@ type MetaData struct {
 	SuccessfulRequests int     `json:"successful_requests"`
 	FailedRequests     int     `json:"failed_requests"`
 	RequestsPerSecond  float64 `json:"requests_per_second"`
+	TestStartTime	  int64  `json:"test_start_time"`
 }
 
 type ResponseData struct {
@@ -61,8 +63,8 @@ type StatData struct {
 func TestPerformance(t *testing.T) {
 
 	// Parse command-line arguments and set global variables.
-	if len(os.Args) < 5 {
-		fmt.Println("Usage: go test -args <concurrent_requests> <duration_seconds> <test_unique_name> <test_display_name> <test_description> ")
+	if len(os.Args) != 9 {
+		fmt.Println("Usage: go test -args <concurrent_requests> <duration_seconds> <test_unique_name> <test_display_name> <test_description> <server_url>")
 		return
 	}
 
@@ -90,6 +92,10 @@ func TestPerformance(t *testing.T) {
 
 	testDescription = os.Args[7]
 
+	serverURL = os.Args[8]
+
+	testStartTime = time.Now().UnixNano()
+
 	// Record test metrics.
 	var (
 		wg             sync.WaitGroup
@@ -110,7 +116,7 @@ func TestPerformance(t *testing.T) {
 			client := &http.Client{}
 
 			for time.Now().Before(endTime) {
-				req, err := http.NewRequest("GET", baseURL, nil)
+				req, err := http.NewRequest("GET", serverURL, nil)
 				if err != nil {
 					t.Errorf("Error creating request: %v", err)
 					return
@@ -244,6 +250,7 @@ func writeRawDataToFile(statData []StatData) error {
 
 func writeMetaDataToFile(metaData string, latencyResults []time.Duration, failedRequests int) error {
 	var meta MetaData
+	meta.ServerURL = serverURL
 	meta.TestUniqueName = testUniqueName
 	meta.TestDisplayName = testDisplayName
 	meta.TestDescription = metaData
@@ -254,6 +261,7 @@ func writeMetaDataToFile(metaData string, latencyResults []time.Duration, failed
 	meta.SuccessfulRequests = meta.TotalRequests - failedRequests
 	meta.FailedRequests = failedRequests
 	meta.RequestsPerSecond = float64(meta.TotalRequests) / runDuration.Seconds()
+	meta.TestStartTime = testStartTime
 
 	jsonFile, err := os.Create(meta.Folder + "metadata.json")
 	if err != nil {
@@ -275,11 +283,9 @@ func writeMetaDataToFile(metaData string, latencyResults []time.Duration, failed
 	return nil
 }
 func callPythonScript() error {
-	// Define the Python script path.
-	pythonScriptPath := "generate_report.py" // Replace with the actual Python script path.
-
+	// Generate report first
+	pythonScriptPath := "generate_report.py"
 	cmd := exec.Command("python", pythonScriptPath, testUniqueName)
-
 	// Set the working directory to the directory containing the Python script.
 	cmd.Dir = filepath.Dir(pythonScriptPath)
 
@@ -288,6 +294,17 @@ func callPythonScript() error {
 	if err != nil {
 		return err
 	}
+
+	// Reindex index.html
+	pythonScriptPath = "reindex.py"
+	cmd = exec.Command("python", pythonScriptPath)
+	cmd.Dir = filepath.Dir(pythonScriptPath)
+	err = cmd.Run()
+	if err != nil {
+		return err
+	}
+
+
 
 	return nil
 }

@@ -12,6 +12,8 @@ class Analyzer:
 
     # data_path: path to the data file
     data_path = None
+    server_url = None
+    test_start_time = None
     title = ''
     description = ''
     concurrent_requests = None
@@ -27,6 +29,12 @@ class Analyzer:
         self.data_path = './performance_tests/' + test_unique_name + '/'
         # read meta data
         meta = json.load(open(self.data_path + 'metadata.json'))
+        self.server_url = meta['server_url']
+        # get test start time and convert it to datetime
+        self.test_start_time = pd.to_datetime(meta['test_start_time'], unit='ns')
+        # convert to readable format YYYY-MM-DD HH:MM:SS
+        self.test_start_time = self.test_start_time.strftime("%Y-%m-%d %H:%M:%S")
+        # extract test information
         self.title = meta['test_display_name']
         self.description = meta['test_description']
         self.concurrent_requests = meta['concurrent_requests']
@@ -210,6 +218,9 @@ class Analyzer:
             f.write("</head><body>")
             f.write("<div class='card rounded-xl m-10 p-10 border-2'>")
             f.write("<p class='text-2xl font-bold italic'>" + self.title + "</p>")
+            f.write("<p class='text-lg font-bold italic'>Test Start Time: <b>" + self.test_start_time + "</b></p>")
+            f.write("<p class='text-lg font-bold italic'>Server URL: <b>" + self.server_url + "</b></p>")
+            f.write("<p class='text-lg font-bold italic'>Test Description:</p>")
             f.write("<p class='text-lg italic'>" + self.description + "</p>")
             f.write("<p class='font-bold italic'>Run Information:</p>")
             f.write("<p class='italic'>Concurrent Requests: <b>" + str(self.concurrent_requests) + "</b></p>")
@@ -239,6 +250,13 @@ class Analyzer:
 
             f.write("</body></html>")
             f.close()
+
+            print("Report created successfully")
+            
+    def generate_test_report_pdf(self):
+        # create pdf file with the report data similar to the html file
+        pass 
+            
 
 
 
