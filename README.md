@@ -31,13 +31,13 @@ This project showcases a way to analyze the performance of a web server.
 #### Option 1: Run directly on your machine
 - Run `go build -o api` to build the web server
 - Run `./api <PORT>` to start the web server
-- Run `go test -args <concurrent_requests> <duration_seconds> <test_unique_name> <test_display_name> <test_description> <server_url>` to start the tester and generate the report
+- Run `go test -args <concurrent_requests> <duration_seconds> <test_unique_name> <test_display_name> <test_description> <endpoint_url>` to start the tester and generate the report
 - All data will be saved in the performance_tests folder
 #### Option 2: Run on docker
 - Run `docker-compose up -d` to start the web server
 - Use run_test_on_docker.sh to start the tester and generate the report
     - `chmod +x run_test_on_docker.sh` to make the script executable
-    - Usage `./run_test_on_docker.sh <docker-container-name> <concurrent_requests> <duration_seconds> <test_unique_name> <test_display_name> <test_description> <server_url`
+    - Usage `./run_test_on_docker.sh <docker-container-name> <concurrent_requests> <duration_seconds> <test_unique_name> <test_display_name> <test_description> <endpoint_url`
 - All data will be saved in the performance_tests folder (binded volume)
 #### (Optional) Run the nginx server
 - Run `cd file_server`

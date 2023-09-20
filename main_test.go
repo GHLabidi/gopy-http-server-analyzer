@@ -64,7 +64,7 @@ func TestPerformance(t *testing.T) {
 
 	// Parse command-line arguments and set global variables.
 	if len(os.Args) != 9 {
-		fmt.Println("Usage: go test -args <concurrent_requests> <duration_seconds> <test_unique_name> <test_display_name> <test_description> <server_url>")
+		fmt.Println("Usage: go test -args <concurrent_requests> <duration_seconds> <test_unique_name> <test_display_name> <test_description> <endpoint_url>")
 		return
 	}
 

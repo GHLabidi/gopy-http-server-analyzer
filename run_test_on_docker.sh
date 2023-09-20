@@ -2,7 +2,7 @@
 
 # Check if the required arguments are provided
 if [ "$#" -ne 7 ]; then
-  echo "Usage: $0 <docker-container-name> <concurrent_requests> <duration_seconds> <test_unique_name> <test_display_name> <test_description> <server_url>"
+  echo "Usage: $0 <docker-container-name> <concurrent_requests> <duration_seconds> <test_unique_name> <test_display_name> <test_description> <endpoint_url>"
   exit 1
 fi
 

@@ -1,0 +1,14 @@
+{
+  "server_url": "http://localhost:8080/check_ip",
+  "test_unique_name": "500_concurrent_120_seconds",
+  "test_display_name": "500 Concurrent - 120 Seconds",
+  "test_description": "500 concurrent clients continuously sending requests to the server for 120 seconds",
+  "folder": "performance_tests/500_concurrent_120_seconds/",
+  "concurrent_requests": 500,
+  "test_duration": 120,
+  "total_requests": 2135714,
+  "successful_requests": 2135714,
+  "failed_requests": 0,
+  "requests_per_second": 17797.616666666665,
+  "test_start_time": 1695178085970409159
+}
