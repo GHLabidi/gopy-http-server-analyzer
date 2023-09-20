@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"sync"
 	"time"
+	"os"
 )
 
 var (
@@ -14,6 +15,9 @@ var (
 )
 
 func main() {
+	// get port from args
+	port := os.Args[1]
+	fmt.Println("Starting server on port " + port + "\n")
 	// Initialize the hash map. Keys are IP addresses, values are request counts.
 	ips = make(map[string]int)
 
@@ -28,7 +32,15 @@ func main() {
 	// /clear endpoint handler function.
 	// clears the hash map
 	http.HandleFunc("/clear", clearHashMap)
-	http.ListenAndServe(":8080", nil)
+
+	// listen on port and if port is not available, exit with error
+	err := http.ListenAndServe(":" + port, nil)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	
+	
 }
 
 func checkIP(w http.ResponseWriter, r *http.Request) {

@@ -1,0 +1,12 @@
+version: '3'
+services:
+  web-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "1111:1111"
+    volumes:
+      - ./performance_tests:/app/performance_tests
+    command: ["./api","1111"]
+    network_mode: bridge

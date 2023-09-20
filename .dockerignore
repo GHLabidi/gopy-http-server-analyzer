@@ -1,6 +1,7 @@
-SAMPLE_FOLDER
+SAMPLE_REPORTS
 performance_tests
 .git
 .gitignore
 .gitattributes
 file_server
+run_test_on_docker.sh
