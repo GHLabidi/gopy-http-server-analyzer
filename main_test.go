@@ -17,10 +17,8 @@ import (
 	"time"
 )
 
-
-
 var (
-	serverURL 		string
+	serverURL          string
 	concurrentRequests int
 	runDuration        time.Duration
 	testUniqueName     string
@@ -31,7 +29,7 @@ var (
 )
 
 type MetaData struct {
-	ServerURL 		string  `json:"server_url"`
+	ServerURL          string  `json:"server_url"`
 	TestUniqueName     string  `json:"test_unique_name"`
 	TestDisplayName    string  `json:"test_display_name"`
 	TestDescription    string  `json:"test_description"`
@@ -42,7 +40,7 @@ type MetaData struct {
 	SuccessfulRequests int     `json:"successful_requests"`
 	FailedRequests     int     `json:"failed_requests"`
 	RequestsPerSecond  float64 `json:"requests_per_second"`
-	TestStartTime	  int64  `json:"test_start_time"`
+	TestStartTime      int64   `json:"test_start_time"`
 }
 
 type ResponseData struct {
@@ -287,6 +285,7 @@ func callPythonScript() error {
 	pythonScriptPath := "generate_report.py"
 	cmd := exec.Command("python", pythonScriptPath, testUniqueName)
 	// Set the working directory to the directory containing the Python script.
+	// TODO fix or remove this
 	cmd.Dir = filepath.Dir(pythonScriptPath)
 
 	// Run the Python script.
@@ -303,8 +302,6 @@ func callPythonScript() error {
 	if err != nil {
 		return err
 	}
-
-
 
 	return nil
 }

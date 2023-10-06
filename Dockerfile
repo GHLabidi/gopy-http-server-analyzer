@@ -1,4 +1,4 @@
-# Goland version: 1.20.5-alpine
+# Golang version: 1.20.5-alpine
 FROM golang:1.20.5-alpine
 
 # Set the working directory inside the container
